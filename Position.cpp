@@ -169,3 +169,21 @@ bool Ship::has_position(Position pos) {
     return false;
 }
 
+
+
+
+
+
+
+
+bool Game::check_valid_move(string move) {
+    if (move.length() != 2) {
+        cout << p1.get_name() << " you entered an invalid input";
+        return false;
+    }
+    if (move[0] < '1' || move[0] > '8' || move[1] < 'A' || move[1] > 'H') {
+        cout << p1.get_name() << " you entered an invalid position";
+        return false;
+    }
+    return true;
+}

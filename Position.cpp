@@ -129,3 +129,43 @@ ostream &operator<<(ostream &os, Position pos) {
     return os;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+bool Ship::has_position(Position pos) {
+    if (is_horizontal()) {
+        if ((pos.get_row() == start.get_row() &&
+             pos.get_col() >= start.get_col() &&
+             pos.get_col() <= end.get_col())) {
+            return true;
+        }
+        if ((pos.get_row() == end.get_row() &&
+             pos.get_col() >= end.get_col()&&
+             pos.get_col() <= start.get_col())) {
+            return true;
+        }
+    }
+    else { //ship is vertical
+        if ((pos.get_col() == start.get_col() &&
+             pos.get_row() >= start.get_row() &&
+             pos.get_row() <= end.get_row())) {
+            return true;
+            
+        }
+        if ((pos.get_col() == end.get_col() &&
+             pos.get_row() >= end.get_row() &&
+             pos.get_row() <= start.get_row())) {
+            return true;
+        }
+    }
+    return false;
+}
+

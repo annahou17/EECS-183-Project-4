@@ -4,18 +4,18 @@
  * Game.cpp
  * Project UID 8885f2d9f10d2f99bc099aa9c3fc0543
  *
- * <#Name#>
- * <#Uniqname#>
+ * Anna Hou, Durrah  Azdi
+ * annahou, durrah
  *
  * Project 4: Battleship
  *
- * <#description#>
+ * Game contains the function implementations for Game.h. Game represents a
+ * gameplay of Battleship. Each game has two players.
  */
 
 #include <fstream>
 
 #include "Game.h"
-
 
 Game::Game() {
     Player player1;
@@ -28,7 +28,9 @@ Game::Game() {
 Game::Game(Player player1, string grid1, Player player2, string grid2) {
     p1 = player1;
     p2 = player2;
+    //checks if grid is empty or doesn't load
     if (grid1 == "" || !p1.load_grid_file(grid1) || p1.get_num_ships() == 0) {
+        //generates a random grid if unable to load a grid
         cout << "Generating random grid for " << p1.get_name() << endl;
         generate_random_grid(p1);
     }
@@ -47,7 +49,7 @@ Player Game::get_p2() {
 }
 
 string Game::get_move(string player_name) {
-    
+    //get the move from the user
     string move;
     cout << player_name << " enter your move: ";
     cin >> move;
@@ -56,11 +58,13 @@ string Game::get_move(string player_name) {
 }
 
 bool Game::check_valid_move(string move) {
+    //check if the move is not a string of length two
     if (move.length() != 2) {
         cout << p1.get_name() << " you entered an invalid input\n";
         return false;
     }
-    if (move.at(0) < '1' || move.at(0) > '8' || 
+    //checks that move is between [1-8][A-H]
+    if (move.at(0) < '1' || move.at(0) > '8' ||
         toupper(move.at(1)) < 'A' || toupper(move.at(1)) > 'H') {
         cout << p1.get_name() << " you entered an invalid position\n";
         return false;
@@ -69,23 +73,33 @@ bool Game::check_valid_move(string move) {
 }
 
 void Game::start(char difficulty, int max_num_rounds) {
+    //initalize variable to count total rounds
     int round = 0;
+    //sets bounrdaries for the game to know when to stop
     while (round < max_num_rounds && !p1.destroyed() && !p2.destroyed()) {
+        //get the move from the user
         string move = get_move(p1.get_name());
+        //continuously loops though to make sure move is valid
         while (!check_valid_move(move)) {
             move = get_move(p1.get_name());
         }
+        //make move into a position
         Position player_move(move.at(0), move.at(1));
+        //player one attacks player two
         p1.attack(p2, player_move);
+        //opponent continues to make a move unless a ship ia destroyed
         if (!p2.destroyed()) {
             opponent_make_move(difficulty);
         }
+        //prints out player 1 grid
         cout << "\nYour grid\n" << endl;
         p1.print_grid();
+        //prints out the guess grid for player 1 of player 2
         cout << endl << p2.get_name() << "'s grid\n" << endl;
         p1.print_guess_grid();
         round++;
     }
+    //prints the winner of the game or no one if max_num_rounds is reached
     cout << endl << "Game over, winner is ";
     if (p1.destroyed()) {
         cout << p2.get_name();
@@ -221,4 +235,3 @@ void Game::opponent_make_move(char difficulty) {
         // TODO: implement for S'more version
     }
 }
-

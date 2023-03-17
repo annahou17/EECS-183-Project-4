@@ -65,11 +65,19 @@ char Player::get_guess_grid_at(int row, int col) {
 }
 
 void Player::add_ship(Ship ship) {
+    // checks to see if num_ship
+    // has not reached max of 5
     if (num_ships < MAX_NUM_SHIPS) {
+        // assigns a ship to a new spot in the array
+        // increments num_ships and remaining_ships
         ships[num_ships] = ship;
         num_ships++;
         remaining_ships++;
         if (ship.is_horizontal()) {
+            //if ship is horizontal, checks if the starting point
+            // comes first or the end
+            // adds ship letters from the "start" position
+            // and loops until the size of ship is reached
             if (ship.get_start().get_col() < ship.get_end().get_col()) {
                 int i = 0;
                 while (i < ship.get_size()) {
@@ -88,6 +96,8 @@ void Player::add_ship(Ship ship) {
             }
         }
         else {
+            // same for not horizontal orientation, but
+            // instead the row increments now
             if (ship.get_start().get_row() < ship.get_end().get_row()) {
                 int i = 0;
                 while (i < ship.get_size()) {
@@ -111,22 +121,33 @@ void Player::add_ship(Ship ship) {
 
 void Player::attack(Player &opponent, Position pos) {
     bool has_hit = false;
+    // loops through to check all the ships in
+    // the player's array
     for (int i = 0; i < opponent.num_ships; i++) {
+        // checks to see if the attack position has a ship there
+        // also checks if the position hasn't been hit yet
         if (opponent.ships[i].has_position(pos)
             && guess_grid[pos.get_row()][pos.get_col()] == '-') {
+            // changes the grid and guess grid to O (hit letter)
             opponent.grid[pos.get_row()][pos.get_col()] = HIT_LETTER;
             guess_grid[pos.get_row()][pos.get_col()] = HIT_LETTER;
+            // calls hit function on the opponent's ship
             opponent.ships[i].hit();
+            // updates boolean to true so that the 'miss' message
+            // doesn't run when done looping through the ships
             has_hit = true;
 
             cout << name << " " << pos << " hit" << endl;
-
+            
+            // checks if the ship has sunk and decrements the
+            // number of ships and announcews it
             if (opponent.ships[i].has_sunk()) {
                 opponent.remaining_ships--;
                 announce_ship_sunk(opponent.ships[i].get_size());
             }
         }
     }
+    // only runs if there were no ships hit
     if (!has_hit) {
         opponent.grid[pos.get_row()][pos.get_col()] = MISS_LETTER;
         guess_grid[pos.get_row()][pos.get_col()] = MISS_LETTER;
@@ -154,18 +175,30 @@ void Player::announce_ship_sunk(int size) {
 }
 
 bool Player::load_grid_file(string filename) {
+    // declaring variables to receive input later on
     Position start_pos;
     Position end_pos;
+    // declaring a boolean to see if file was successfully opened
     bool file_opened = false;
     ifstream input_file;
+    
+    // opening the file
     input_file.open(filename);
+    // updating boolean to indicate file has opened
     if (input_file.good()) {
         file_opened = true;
     }
+    // getting first inputs from the file
     input_file >> start_pos >> end_pos;
+    // while file is sitll in a good state,
+    // continues reading data
     while (input_file.good()) {
+        // creates and adds a ship based on 
+        // the data read
         Ship ship(start_pos, end_pos);
         add_ship(ship);
+        // read more data.
+        // while loop terminates when it enters a fail state
         input_file >> start_pos >> end_pos;
     }
     if (file_opened) {

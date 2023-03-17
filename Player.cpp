@@ -4,12 +4,12 @@
  * Player.cpp
  * Project UID 8885f2d9f10d2f99bc099aa9c3fc0543
  *
- * <#Name#>
- * <#Uniqname#>
+ * Anna Hou, Durrah  Azdi
+ * annahou, durrah
  *
  * Project 4: Battleship
  *
- * <#description#>
+ * Player holds the Player.h functions. Player represents a player in the Battleship game.
  */
 
 #include <fstream>
@@ -32,10 +32,13 @@ Player::Player(string name_val) {
 }
 
 void Player::init_grid() {
-    for (int i = 0; i < MAX_GRID_SIZE; i++) {
-        for (int j = 0; j < MAX_GRID_SIZE; j++) {
-            grid[i][j] = EMPTY_LETTER;
-            guess_grid[i][j] = EMPTY_LETTER;
+    //loops through row
+    for (int row = 0; row < MAX_GRID_SIZE; row++) {
+        //loops through col
+        for (int col = 0; col < MAX_GRID_SIZE; col++) {
+            //sets each element in both grids to EMPTY_LETTER
+            grid[row][col] = EMPTY_LETTER;
+            guess_grid[row][col] = EMPTY_LETTER;
         }
     }
     return;
@@ -133,6 +136,7 @@ void Player::attack(Player &opponent, Position pos) {
 }
 
 void Player::announce_ship_sunk(int size) {
+    //prints the corresponding message based on what size ship was sunk
     cout << "Congratulations " << name << "! You sunk a ";
     if (size == 2) {
         cout << "Destroyer\n";
@@ -173,6 +177,7 @@ bool Player::load_grid_file(string filename) {
 }
 
 bool Player::destroyed() {
+    //if there is not more ships, then return false
     if (remaining_ships == 0) {
         return true;
     }

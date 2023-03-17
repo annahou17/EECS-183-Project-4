@@ -30,7 +30,7 @@ Position::Position(char row_in, char col_in) {
     //turn row into integer and subtract one to get proper interger position
     row = row_in - '0' - 1;
     /*checks if col_in is an upper or lower case letter and subtracts it by
-    its case letter to get the interger value of a letter*/
+    its case letter to get the interger value*/
     if (col_in > 'Z') {
         col = col_in - 'a';
     }
@@ -70,7 +70,7 @@ void Position::read(istream &is) {
         //new variables to hold the values we want to keep (number and letter)
         char new_row;
         char new_col;
-        //gets the data from (1,A) -> 1A
+        //reads in (1,A) instead of 1A
         is >> junk >> new_row >> junk >> new_col >> junk;
        
         if (new_col > 'Z') {
